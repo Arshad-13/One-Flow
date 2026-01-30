@@ -1,6 +1,6 @@
 # Oddo Hackathon
 
-A modern web application built for the Oddo X Amalthea IIT Gandhinagar Hackathon (offline round), leveraging a modular, scalable architecture with a strong focus on developer velocity, data integrity, and deployability. The application is deployed on [Vercel](https://oddo-hackathon-pied.vercel.app) and uses a JavaScript + Prisma + Next.js stack. And here is the demo video: [Click here](https://drive.google.com/file/d/1llmVyhT2Tzix841EKJA5y-EqIiAJBu7E/view?usp=drive_link)
+OneFlow is a modular Project Management system that takes your projects from planning to execution to billing seamlessly. Manage projects, tasks, timesheets, and finances—all integrated in one unified platform. The application is deployed on [Vercel](https://oddo-hackathon-pied.vercel.app) and uses a JavaScript + Prisma + Next.js stack. And here is the demo video: [Click here](https://drive.google.com/file/d/1llmVyhT2Tzix841EKJA5y-EqIiAJBu7E/view?usp=drive_link)
 
 ## Table of Contents
 1. Overview

@@ -258,7 +258,7 @@ export default function ProjectMembersPanel({ projectId, userRole }) {
           <p className="text-muted-foreground mb-2">No team members yet</p>
           {canManageMembers && (
             <p className="text-sm text-muted-foreground">
-              Click "Add Member" to assign team members to this project
+              Click &ldquo;Add Member&rdquo; to assign team members to this project
             </p>
           )}
         </div>

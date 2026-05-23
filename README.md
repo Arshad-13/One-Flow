@@ -156,10 +156,12 @@ pnpm install
 ### Database Setup
 1. Create database
 2. Set `DATABASE_URL` in `.env`
-3. Run migrations:
+3. Run migrations and seed the baseline data:
    ```bash
-   pnpm prisma migrate dev
+  pnpm db:setup
    ```
+
+If you need to re-apply schema changes during development, use `pnpm prisma migrate dev`. For a brand-new database or production-like environment, `pnpm db:setup` is the safer choice.
 
 ### Development
 ```bash
@@ -172,14 +174,22 @@ Navigate to `http://localhost:3000`.
 Create a `.env` file:
 ```
 DATABASE_URL="postgresql://user:password@host:port/dbname"
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
-# If using auth/session:
-AUTH_SECRET="your-long-random-secret"
-# If using external APIs:
-EXTERNAL_API_KEY="..."
+JWT_SECRET="your-long-random-secret"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# Required for email features:
+EMAIL_USER="your-gmail-address@gmail.com"
+EMAIL_APP_PASSWORD="your-gmail-app-password"
+
+# Required for OCR bill processing:
+OCR_SPACE_API_KEY="..."
 ```
 
-Never commit secrets. Use Vercel dashboard for production environment variables.
+The current runtime uses `JWT_SECRET` for auth tokens, not `AUTH_SECRET` or `NEXTAUTH_SECRET`.
+
+`DATABASE_URL` is required for all Prisma-backed API routes and seed scripts. `EMAIL_USER`, `EMAIL_APP_PASSWORD`, and `OCR_SPACE_API_KEY` are only needed when you use the email or OCR flows.
+
+Never commit secrets. Use the Vercel dashboard for production environment variables.
 
 ## 10. Scripts
 
@@ -190,10 +200,10 @@ Add (or confirm) helpful entries in `package.json`:
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate",
-    "import:users": "node scripts/import-users.mjs"
+    "lint": "eslint",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:setup": "prisma migrate deploy && prisma db seed"
   }
 }
 ```
@@ -231,6 +241,11 @@ Add CI pipeline (GitHub Actions) for automated test + lint + build.
 Automate migration on deploy (use a post-deployment hook or manual trigger):
 ```bash
 pnpm prisma migrate deploy
+```
+
+For a fresh database, initialize it with:
+```bash
+pnpm db:setup
 ```
 
 ## 14. Security Considerations
@@ -320,12 +335,17 @@ john.smith@example.com,John Smith
 DATABASE_URL=...
 JWT_SECRET=...
 
+NEXT_PUBLIC_APP_URL=...
+
 EMAIL_USER=...
 EMAIL_APP_PASSWORD=...
 
 OCR_SPACE_API_KEY=...
 ```
-- have all these values in your .env file at root of the project for local setup and contribuations
+
+Legacy names such as `AUTH_SECRET` and `NEXT_PUBLIC_BASE_URL` are no longer used by the codebase.
+
+Have these values in your `.env` file at the project root for local setup and contributions.
 
 Ensure validation before import.
 

@@ -29,30 +29,34 @@ export function TaskModal({ isOpen, onClose, onSubmit, task = null, projectId, i
   }, [isOpen, projectId]);
 
   useEffect(() => {
-    if (task) {
-      const assignedIds = task.assignees ? task.assignees.map(a => a.user.id) : [];
-      setFormData({
-        title: task.title || '',
-        description: task.description || '',
-        status: task.status || 'new',
-        priority: task.priority || 'medium',
-        assignedUserIds: assignedIds,
-        dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
-        estimatedHours: task.estimatedHours || '',
-        blockerReason: task.blockerReason || ''
-      });
-    } else {
-      setFormData({
-        title: '',
-        description: '',
-        status: initialStatus,
-        priority: 'medium',
-        assignedUserIds: [],
-        dueDate: '',
-        estimatedHours: '',
-        blockerReason: ''
-      });
-    }
+    const timer = window.setTimeout(() => {
+      if (task) {
+        const assignedIds = task.assignees ? task.assignees.map(a => a.user.id) : [];
+        setFormData({
+          title: task.title || '',
+          description: task.description || '',
+          status: task.status || 'new',
+          priority: task.priority || 'medium',
+          assignedUserIds: assignedIds,
+          dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
+          estimatedHours: task.estimatedHours || '',
+          blockerReason: task.blockerReason || ''
+        });
+      } else {
+        setFormData({
+          title: '',
+          description: '',
+          status: initialStatus,
+          priority: 'medium',
+          assignedUserIds: [],
+          dueDate: '',
+          estimatedHours: '',
+          blockerReason: ''
+        });
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [task, initialStatus]);
 
   const handleSubmit = (e) => {

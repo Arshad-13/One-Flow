@@ -20,39 +20,48 @@ export default function FinancialMetrics({ projectId = null }) {
     profit: 0
   })
 
-  // Fetch financial metrics
-  const fetchMetrics = async () => {
-    try {
-      const endpoint = projectId 
-        ? `/api/projects/${projectId}/financials`
-        : '/api/financials/summary'
-      
-      const res = await fetch(endpoint)
-      if (res.ok) {
-        const data = await res.json()
-        
-        // Store previous metrics for change indicators
-        setPreviousMetrics({
-          revenue: metrics.revenue,
-          costs: metrics.costs,
-          profit: metrics.profit
-        })
-        
-        setMetrics({
-          revenue: parseFloat(data.revenue || 0),
-          costs: parseFloat(data.costs || 0),
-          profit: parseFloat(data.profit || 0),
-          loading: false
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching financial metrics:', error)
-      setMetrics(prev => ({ ...prev, loading: false }))
-    }
-  }
-
   useEffect(() => {
-    fetchMetrics()
+    let isMounted = true
+
+    const fetchMetrics = async () => {
+      try {
+        const endpoint = projectId
+          ? `/api/projects/${projectId}/financials`
+          : '/api/financials/summary'
+
+        const res = await fetch(endpoint)
+        if (res.ok && isMounted) {
+          const data = await res.json()
+
+          setPreviousMetrics({
+            revenue: metrics.revenue,
+            costs: metrics.costs,
+            profit: metrics.profit
+          })
+
+          setMetrics({
+            revenue: parseFloat(data.revenue || 0),
+            costs: parseFloat(data.costs || 0),
+            profit: parseFloat(data.profit || 0),
+            loading: false
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching financial metrics:', error)
+        if (isMounted) {
+          setMetrics(prev => ({ ...prev, loading: false }))
+        }
+      }
+    }
+
+    const timer = window.setTimeout(() => {
+      void fetchMetrics()
+    }, 0)
+
+    return () => {
+      isMounted = false
+      window.clearTimeout(timer)
+    }
   }, [projectId])
 
   // Real-time event handlers

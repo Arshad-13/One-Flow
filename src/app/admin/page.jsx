@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Users, Mail, CheckCircle, Clock, ArrowLeft, Shield, Copy, Send, Loader2, UserPlus, Upload, FileSpreadsheet } from "lucide-react";
+import { Users, Mail, CheckCircle, Clock, ArrowLeft, Shield, Copy, Send, Loader2, UserPlus, Upload, FileSpreadsheet, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -424,7 +424,7 @@ export default function AdminPage() {
                 <div className="flex items-start gap-2 p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-xs text-blue-800 dark:text-blue-200">
                   <Mail className="w-4 h-4 mt-0.5 shrink-0" />
                   <span>
-                    Credentials have been sent to the user's email. You can also share them manually using the copy buttons above.
+                    Credentials have been sent to the user&apos;s email. You can also share them manually using the copy buttons above.
                   </span>
                 </div>
               </div>

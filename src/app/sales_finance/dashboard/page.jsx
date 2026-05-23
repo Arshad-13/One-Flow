@@ -119,7 +119,7 @@ export default function SalesFinanceDashboard() {
         {projects.length === 0 ? (
           <div className="p-8 sm:p-12 text-center">
             <p className="text-muted-foreground mb-4">No projects yet</p>
-            <p className="text-sm text-muted-foreground">Financial documents (SO, PO, Invoices, Bills) are managed within each project's Links tab</p>
+            <p className="text-sm text-muted-foreground">Financial documents (SO, PO, Invoices, Bills) are managed within each project&apos;s Links tab</p>
           </div>
         ) : (
           <div className="divide-y">

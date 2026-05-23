@@ -12,7 +12,8 @@
     "lint": "eslint",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:setup": "prisma migrate deploy && prisma db seed"
+    "db:setup": "prisma migrate deploy && prisma db seed",
+    "vercel-install": "pnpm approve-builds --all && pnpm install"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

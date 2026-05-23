@@ -5,6 +5,11 @@ export function useRealtimeUpdates(eventHandlers = {}) {
   const eventSourceRef = useRef(null)
   const reconnectTimeoutRef = useRef(null)
   const reconnectAttemptsRef = useRef(0)
+  const eventHandlersRef = useRef(eventHandlers)
+
+  useEffect(() => {
+    eventHandlersRef.current = eventHandlers
+  }, [eventHandlers])
 
   useEffect(() => {
     let isMounted = true
@@ -38,14 +43,14 @@ export function useRealtimeUpdates(eventHandlers = {}) {
           }
 
           // Call specific handler for this event type
-          const handler = eventHandlers[data.type]
+          const handler = eventHandlersRef.current[data.type]
           if (handler && typeof handler === 'function') {
             handler(data.data, data.timestamp)
           }
 
           // Call generic onUpdate handler
-          if (eventHandlers.onUpdate && typeof eventHandlers.onUpdate === 'function') {
-            eventHandlers.onUpdate(data)
+          if (eventHandlersRef.current.onUpdate && typeof eventHandlersRef.current.onUpdate === 'function') {
+            eventHandlersRef.current.onUpdate(data)
           }
         } catch (error) {
           console.error('Error parsing SSE message:', error)
@@ -74,8 +79,8 @@ export function useRealtimeUpdates(eventHandlers = {}) {
             }, delay)
           } else {
             console.error('Max reconnection attempts reached')
-            if (eventHandlers.onMaxReconnectAttempts) {
-              eventHandlers.onMaxReconnectAttempts()
+            if (eventHandlersRef.current.onMaxReconnectAttempts) {
+              eventHandlersRef.current.onMaxReconnectAttempts()
             }
           }
         }
@@ -94,7 +99,7 @@ export function useRealtimeUpdates(eventHandlers = {}) {
         clearTimeout(reconnectTimeoutRef.current)
       }
     }
-  }, []) // Empty deps - handlers are accessed via ref
+  }, [])
 
   return { isConnected }
 }

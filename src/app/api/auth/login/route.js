@@ -27,6 +27,10 @@ export async function POST(req) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    if (user.isActive === false) {
+      return NextResponse.json({ error: "Account is disabled" }, { status: 403 });
+    }
+
     // Validate password
     const passwordValid = await bcrypt.compare(password, user.passwordHash);
     if (!passwordValid) {

@@ -478,7 +478,7 @@ export default function AdminPage() {
           <div className="p-6 border-b bg-muted/30">
             <div className="flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold">Invitations History</h2>
+              <h2 className="text-xl font-semibold">User Provisioning History</h2>
             </div>
           </div>
           {invitations.length === 0 ? (
@@ -486,8 +486,8 @@ export default function AdminPage() {
               <div className="inline-flex p-4 bg-muted rounded-full mb-4">
                 <Mail className="w-12 h-12 opacity-50" />
               </div>
-              <p className="text-lg font-medium mb-1">No invitations sent yet</p>
-              <p className="text-sm">Send your first invitation above to get started.</p>
+              <p className="text-lg font-medium mb-1">No users provisioned yet</p>
+              <p className="text-sm">Create your first user above to get started.</p>
             </div>
           ) : (
             <div className="divide-y">
@@ -534,13 +534,14 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <Button
-                      onClick={() => handleRevokeUser(member.id)}
+                      onClick={() => handleRevokeUser(inv.userId)}
                       variant="destructive"
                       size="sm"
                       className="gap-2 shrink-0"
+                      disabled={!inv.userId}
                     >
                       <Trash2 className="w-3 h-3" />
-                      <span className="hidden sm:inline">Remove</span>
+                      <span className="hidden sm:inline">Deactivate</span>
                     </Button>
                   </div>
                 </div>

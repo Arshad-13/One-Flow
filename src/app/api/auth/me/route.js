@@ -11,7 +11,7 @@ export async function GET(req) {
     include: { role: true, company: true }
   });
 
-  if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!user || user.isActive === false) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const name = [user.firstName, user.lastName].filter(Boolean).join(" ") || null;
   return NextResponse.json({ 
     id: user.id, 

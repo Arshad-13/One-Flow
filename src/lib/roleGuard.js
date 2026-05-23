@@ -17,13 +17,14 @@ export async function getUserFromRequest(req) {
         id: true, 
         email: true, 
         companyId: true,
+        isActive: true,
         role: {
           select: { name: true }
         }
       }
     });
 
-    if (!user) return null;
+    if (!user || user.isActive === false) return null;
 
     return {
       id: user.id,
@@ -50,20 +51,188 @@ export function requireRole(user, allowed = []) {
  */
 export async function validateCompanyAccess(user, model, resourceId) {
   if (!user || !user.companyId) return false;
-  
-  try {
-    const resource = await prisma[model].findUnique({
-      where: { id: resourceId },
-      include: {
-        // Adjust based on model - this is a generic approach
-        user: { select: { companyId: true } }
-      }
-    });
 
-    if (!resource) return false;
-    
-    // Check if resource belongs to same company
-    return resource.user?.companyId === user.companyId;
+  try {
+    const resolvers = {
+      user: async () => {
+        const resource = await prisma.user.findUnique({
+          where: { id: resourceId },
+          select: { companyId: true },
+        });
+        return resource?.companyId ?? null;
+      },
+      project: async () => {
+        const resource = await prisma.project.findUnique({
+          where: { id: resourceId },
+          select: {
+            projectManagerId: true,
+            projectManager: { select: { companyId: true } },
+          },
+        });
+        return resource?.projectManager?.companyId ?? null;
+      },
+      task: async () => {
+        const resource = await prisma.task.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      timesheet: async () => {
+        const resource = await prisma.timesheet.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      salesOrder: async () => {
+        const resource = await prisma.salesOrder.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      purchaseOrder: async () => {
+        const resource = await prisma.purchaseOrder.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      customerInvoice: async () => {
+        const resource = await prisma.customerInvoice.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      vendorBill: async () => {
+        const resource = await prisma.vendorBill.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      expense: async () => {
+        const resource = await prisma.expense.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      projectMember: async () => {
+        const resource = await prisma.projectMember.findUnique({
+          where: { id: resourceId },
+          select: {
+            project: {
+              select: {
+                projectManager: { select: { companyId: true } },
+              },
+            },
+          },
+        });
+        return resource?.project?.projectManager?.companyId ?? null;
+      },
+      taskAssignment: async () => {
+        const resource = await prisma.taskAssignment.findUnique({
+          where: { id: resourceId },
+          select: {
+            task: {
+              select: {
+                project: {
+                  select: {
+                    projectManager: { select: { companyId: true } },
+                  },
+                },
+              },
+            },
+          },
+        });
+        return resource?.task?.project?.projectManager?.companyId ?? null;
+      },
+      taskComment: async () => {
+        const resource = await prisma.taskComment.findUnique({
+          where: { id: resourceId },
+          select: {
+            task: {
+              select: {
+                project: {
+                  select: {
+                    projectManager: { select: { companyId: true } },
+                  },
+                },
+              },
+            },
+          },
+        });
+        return resource?.task?.project?.projectManager?.companyId ?? null;
+      },
+      taskAttachment: async () => {
+        const resource = await prisma.taskAttachment.findUnique({
+          where: { id: resourceId },
+          select: {
+            task: {
+              select: {
+                project: {
+                  select: {
+                    projectManager: { select: { companyId: true } },
+                  },
+                },
+              },
+            },
+          },
+        });
+        return resource?.task?.project?.projectManager?.companyId ?? null;
+      },
+    };
+
+    const resolveCompanyId = resolvers[model];
+    if (!resolveCompanyId) return false;
+
+    const resourceCompanyId = await resolveCompanyId();
+    return resourceCompanyId === user.companyId;
   } catch (error) {
     console.error('Company access validation error:', error);
     return false;

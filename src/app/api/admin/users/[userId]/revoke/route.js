@@ -35,19 +35,19 @@ export async function POST(req, { params: paramsPromise }) {
       return NextResponse.json({ error: 'User not found or does not belong to your company' }, { status: 404 });
     }
 
-    // Delete user from all projects
+    // Remove the user from active project membership and disable login access.
     await prisma.projectMember.deleteMany({
       where: { userId: userId },
     });
 
-    // Delete the user from database
-    await prisma.user.delete({
+    await prisma.user.update({
       where: { id: userId },
+      data: { isActive: false },
     });
 
     return NextResponse.json({ 
       success: true,
-      message: 'User revoked and removed from all projects'
+      message: 'User deactivated and removed from all projects'
     });
   } catch (error) {
     console.error('Error revoking user:', error);

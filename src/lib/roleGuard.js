@@ -1,12 +1,13 @@
 import { jwtVerify } from "jose";
 import { prisma } from "@/lib/prisma";
 import { normalizeRole } from "@/lib/roles";
+import { getTokenFromRequest } from "@/lib/requestAuth";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function getUserFromRequest(req) {
   try {
-    const token = req.cookies.get("token")?.value; // ✅ works with App Router
+    const token = getTokenFromRequest(req);
     if (!token) return null;
 
     const { payload } = await jwtVerify(token, secret);

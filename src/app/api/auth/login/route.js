@@ -76,6 +76,9 @@ export async function POST(req) {
     };
     
     res.cookies.set("token", token, cookieOptions);
+    if (isProduction) {
+      res.cookies.set("__Secure-token", token, cookieOptions);
+    }
     
     console.log('[Login] Cookie set:', {
       isProduction,

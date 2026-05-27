@@ -13,6 +13,7 @@ export async function POST(req) {
   // Clear cookie then redirect home (303 so POST becomes GET on redirect)
   const res = NextResponse.redirect(new URL("/", req.url), 303);
   res.cookies.set("token", "", cookieOptions);
+  res.cookies.set("__Secure-token", "", cookieOptions);
   return res;
 }
 
@@ -20,5 +21,6 @@ export async function POST(req) {
 export async function GET(req) {
   const res = NextResponse.redirect(new URL("/", req.url), 302);
   res.cookies.set("token", "", cookieOptions);
+  res.cookies.set("__Secure-token", "", cookieOptions);
   return res;
 }

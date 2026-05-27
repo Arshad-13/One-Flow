@@ -1,6 +1,7 @@
 import { getUserFromRequest } from "@/lib/roleGuard";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { normalizeRole } from "@/lib/roles";
 
 export async function GET(req) {
   const userToken = await getUserFromRequest(req);
@@ -12,11 +13,14 @@ export async function GET(req) {
   });
 
   if (!user || user.isActive === false) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const role = normalizeRole(user.role?.name);
+  if (!role) return NextResponse.json({ error: "Invalid role" }, { status: 500 });
+
   const name = [user.firstName, user.lastName].filter(Boolean).join(" ") || null;
   return NextResponse.json({ 
     id: user.id, 
     email: user.email, 
-    role: user.role?.name, 
+    role,
     name,
     firstName: user.firstName,
     lastName: user.lastName,

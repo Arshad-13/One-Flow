@@ -1,5 +1,6 @@
 import { jwtVerify } from "jose";
 import { prisma } from "@/lib/prisma";
+import { normalizeRole } from "@/lib/roles";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -26,11 +27,14 @@ export async function getUserFromRequest(req) {
 
     if (!user || user.isActive === false) return null;
 
+    const role = normalizeRole(user.role?.name);
+    if (!role) return null;
+
     return {
       id: user.id,
       email: user.email,
       companyId: user.companyId,
-      role: user.role.name
+      role
     };
   } catch (err) {
     console.error("JWT verification failed:", err);

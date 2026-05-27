@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
+import { normalizeRole } from "@/lib/roles";
 
 const prisma = new PrismaClient();
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -46,10 +47,16 @@ export async function POST(req) {
 
     console.log('Login successful for:', email);
 
+    const normalizedRole = normalizeRole(user.role?.name);
+
+    if (!normalizedRole) {
+      return NextResponse.json({ error: "User role is not configured correctly" }, { status: 500 });
+    }
+
     const token = await new SignJWT({
       id: user.id,
       email: user.email,
-      role: user.role?.name,
+      role: normalizedRole,
     })
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime("1d")
@@ -74,7 +81,7 @@ export async function POST(req) {
       isProduction,
       cookieOptions,
       userEmail: user.email,
-      role: user.role?.name
+      role: normalizedRole
     });
     
     return res;

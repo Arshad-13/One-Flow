@@ -184,7 +184,7 @@ export default function ProjectsPage() {
           {filteredProjects.map((project) => (
           <Link
             key={project.id}
-            href={`/dashboard/projects/${project.id}`}
+            href={`/team_member/dashboard/projects/${project.id}`}
             className="bg-card border rounded-xl p-6 hover:shadow-lg transition-all"
           >
             <div className="flex items-start justify-between mb-4">

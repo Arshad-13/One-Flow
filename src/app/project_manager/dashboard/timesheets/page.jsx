@@ -55,7 +55,7 @@ export default function TimesheetsPage() {
           <p className="text-muted-foreground">Track all company time entries and expenses</p>
         </div>
         <Button asChild>
-          <Link href="/admin/dashboard/timesheets/create">
+          <Link href="/project_manager/dashboard/timesheets/create">
             <Plus className="w-4 h-4 mr-2" />
             Log Time
           </Link>

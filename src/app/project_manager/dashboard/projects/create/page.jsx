@@ -51,7 +51,7 @@ export default function CreateProjectPage() {
 
       const project = await res.json()
       toast.success('Project created successfully!')
-      router.push(`/dashboard/projects/${project.id}`)
+      router.push(`/project_manager/dashboard/projects/${project.id}`)
     } catch (error) {
       console.error('Error creating project:', error)
       toast.error(error.message || 'Failed to create project')
@@ -66,7 +66,7 @@ export default function CreateProjectPage() {
       {/* Header */}
       <div className="mb-8">
         <Button variant="ghost" size="sm" className="mb-4" asChild>
-          <Link href="/dashboard/projects">
+          <Link href="/project_manager/dashboard/projects">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Projects
           </Link>

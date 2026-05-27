@@ -38,7 +38,7 @@ export default function CreateSalesOrderPage() {
       const userData = await res.json()
       if (userData.role !== 'sales_finance' && userData.role !== 'admin') {
         toast.error('Access denied: Sales & Finance or Admin role required')
-        router.push('/dashboard')
+        router.push('/admin/dashboard')
         return
       }
       setUser(userData)
@@ -128,7 +128,7 @@ export default function CreateSalesOrderPage() {
       }
 
       toast.success('Sales order created successfully!')
-      router.push('/dashboard/sales-orders')
+      router.push('/admin/dashboard/sales-orders')
     } catch (error) {
       console.error('Error creating sales order:', error)
       toast.error(error.message)
@@ -149,7 +149,7 @@ export default function CreateSalesOrderPage() {
     <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-6">
         <Button variant="outline" size="sm" asChild className="mb-4">
-          <Link href="/dashboard/sales-orders">
+          <Link href="/admin/dashboard/sales-orders">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Sales Orders
           </Link>

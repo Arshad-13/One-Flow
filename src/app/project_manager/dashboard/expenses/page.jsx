@@ -138,7 +138,7 @@ export default function ExpensesPage() {
           <p className="text-muted-foreground">Submit and track project expenses</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/expenses/create">
+          <Link href="/project_manager/dashboard/expenses/create">
             <Plus className="w-4 h-4 mr-2" />
             New Expense
           </Link>
@@ -169,7 +169,7 @@ export default function ExpensesPage() {
             <h3 className="text-lg font-semibold mb-2">No expenses found</h3>
             <p className="text-muted-foreground mb-4">Start submitting expenses to see them here</p>
             <Button asChild>
-              <Link href="/dashboard/expenses/create">
+              <Link href="/project_manager/dashboard/expenses/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Expense
               </Link>

@@ -25,7 +25,7 @@ export default function SalesOrdersPage() {
       const userData = await res.json()
       if (userData.role !== 'sales_finance' && userData.role !== 'admin') {
         toast.error('Access denied: Sales & Finance role required')
-        window.location.href = '/dashboard'
+        window.location.href = '/admin/dashboard'
         return
       }
       setUser(userData)
@@ -82,7 +82,7 @@ export default function SalesOrdersPage() {
           <p className="text-muted-foreground">Track expected revenue from clients</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sales-orders/create">
+          <Link href="/admin/dashboard/sales-orders/create">
             <Plus className="w-4 h-4 mr-2" />
             New Sales Order
           </Link>
@@ -110,7 +110,7 @@ export default function SalesOrdersPage() {
             <h3 className="text-lg font-semibold mb-2">No sales orders found</h3>
             <p className="text-muted-foreground mb-4">Create your first sales order to track revenue</p>
             <Button asChild>
-              <Link href="/dashboard/sales-orders/create">
+              <Link href="/admin/dashboard/sales-orders/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Sales Order
               </Link>

@@ -77,7 +77,7 @@ export default function CreateExpensePage() {
 
       const expense = await response.json()
       toast.success('Expense submitted successfully!')
-      router.push('/dashboard/expenses')
+      router.push('/project_manager/dashboard/expenses')
     } catch (error) {
       console.error('Error creating expense:', error)
       toast.error(error.message || 'Failed to submit expense')
@@ -91,7 +91,7 @@ export default function CreateExpensePage() {
       <div className="w-full max-w-2xl">
       <div className="mb-8">
         <Button variant="ghost" size="sm" className="mb-4" asChild>
-          <Link href="/dashboard/expenses">
+          <Link href="/project_manager/dashboard/expenses">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Expenses
           </Link>

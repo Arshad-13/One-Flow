@@ -141,7 +141,7 @@ export default function ProjectsPage() {
           <p className="text-muted-foreground">Manage all your projects and track their profitability</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/projects/create">
+          <Link href="/project_manager/dashboard/projects/create">
             <Plus className="w-4 h-4 mr-2" />
             New Project
           </Link>
@@ -174,7 +174,7 @@ export default function ProjectsPage() {
           </p>
           {!searchQuery && (
             <Button asChild>
-              <Link href="/dashboard/projects/create">
+              <Link href="/project_manager/dashboard/projects/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Project
               </Link>
@@ -186,7 +186,7 @@ export default function ProjectsPage() {
           {filteredProjects.map((project) => (
           <Link
             key={project.id}
-            href={`/dashboard/projects/${project.id}`}
+            href={`/project_manager/dashboard/projects/${project.id}`}
             className="bg-card border rounded-xl p-6 hover:shadow-lg transition-all"
           >
             <div className="flex items-start justify-between mb-4">

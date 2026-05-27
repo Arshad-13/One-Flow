@@ -168,12 +168,12 @@ export default function AnalyticsPage() {
       
       // Fetch all necessary data including tasks
       const [projectsRes, invoicesRes, expensesRes, timesheetsRes, salesOrdersRes, purchaseOrdersRes] = await Promise.all([
-        fetch('/api/projects'),
-        fetch('/api/customer-invoices'),
-        fetch('/api/expenses'),
-        fetch('/api/timesheets'),
-        fetch('/api/sales-orders'),
-        fetch('/api/purchase-orders')
+        fetch('/api/projects', { credentials: 'include' }),
+        fetch('/api/customer-invoices', { credentials: 'include' }),
+        fetch('/api/expenses', { credentials: 'include' }),
+        fetch('/api/timesheets', { credentials: 'include' }),
+        fetch('/api/sales-orders', { credentials: 'include' }),
+        fetch('/api/purchase-orders', { credentials: 'include' })
       ])
 
       if (!projectsRes.ok || !invoicesRes.ok || !expensesRes.ok || !timesheetsRes.ok) {
@@ -192,7 +192,7 @@ export default function AnalyticsPage() {
       const projectTasksMap = {}
       for (const project of projects) {
         try {
-          const tasksRes = await fetch(`/api/projects/${project.id}/tasks`)
+          const tasksRes = await fetch(`/api/projects/${project.id}/tasks`, { credentials: 'include' })
           if (tasksRes.ok) {
             const projectTasks = await tasksRes.json()
             allTasks = [...allTasks, ...projectTasks]
@@ -204,7 +204,7 @@ export default function AnalyticsPage() {
       }
 
       // Fetch users for resource utilization
-      const usersRes = await fetch('/api/users')
+      const usersRes = await fetch('/api/users', { credentials: 'include' })
       const users = usersRes.ok ? await usersRes.json() : []
 
       // Calculate summary statistics

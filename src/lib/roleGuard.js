@@ -11,20 +11,44 @@ export async function getUserFromRequest(req) {
     if (!token) return null;
 
     const { payload } = await jwtVerify(token, secret);
+
+    const normalizedUserId =
+      typeof payload.id === "string" && /^\d+$/.test(payload.id)
+        ? Number(payload.id)
+        : payload.id;
+
+    let user = null;
     
     // CRITICAL: Get user's companyId from database to ensure data isolation
-    const user = await prisma.user.findUnique({
-      where: { id: payload.id },
-      select: { 
-        id: true, 
-        email: true, 
-        companyId: true,
-        isActive: true,
-        role: {
-          select: { name: true }
-        }
-      }
-    });
+    if (typeof normalizedUserId === "number" && Number.isInteger(normalizedUserId)) {
+      user = await prisma.user.findUnique({
+        where: { id: normalizedUserId },
+        select: {
+          id: true,
+          email: true,
+          companyId: true,
+          isActive: true,
+          role: {
+            select: { name: true },
+          },
+        },
+      });
+    }
+
+    if (!user && payload.email && typeof payload.email === "string") {
+      user = await prisma.user.findUnique({
+        where: { email: payload.email },
+        select: {
+          id: true,
+          email: true,
+          companyId: true,
+          isActive: true,
+          role: {
+            select: { name: true },
+          },
+        },
+      });
+    }
 
     if (!user || user.isActive === false) return null;
 

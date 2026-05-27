@@ -9,7 +9,27 @@ export async function GET(req, { params }) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
-    const projectId = parseInt(id);
+    const projectId = Number.parseInt(id, 10);
+
+    if (Number.isNaN(projectId)) {
+      if (id.startsWith("demo-")) {
+        return NextResponse.json({
+          projectName: id === "demo-1" ? "Phoenix Infrastructure Revamp" : "Project Prometheus Design",
+          progress: id === "demo-1" ? 65 : 15,
+          revenue: { total: 0, salesOrders: { amount: 0, count: 0 }, invoices: { amount: 0, count: 0 } },
+          costs: {
+            expenses: { amount: 0, count: 0 },
+            purchaseOrders: { amount: 0, count: 0 },
+            vendorBills: { amount: 0, count: 0 },
+            total: 0,
+          },
+          profitability: { profit: 0, profitMargin: 0, status: "Break-even" },
+          budget: { allocated: 0, used: 0, remaining: 0, utilization: 0 },
+          unbilled: { timesheets: 0, expenses: 0 },
+        });
+      }
+      return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
+    }
 
     // Validate project exists
     const project = await prisma.project.findUnique({

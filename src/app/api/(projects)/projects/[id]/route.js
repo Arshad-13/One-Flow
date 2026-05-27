@@ -2,6 +2,33 @@ import { getUserFromRequest } from "@/lib/roleGuard";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+const demoProjectDetails = {
+  "demo-1": {
+    id: "demo-1",
+    name: "Phoenix Infrastructure Revamp",
+    description: "Modernizing core cloud clusters and edge nodes.",
+    status: "in_progress",
+    budget: 45000,
+    progress: 65,
+    projectManager: { id: 1, firstName: "Demo", lastName: "Admin", email: "admin@oneflow.com" },
+    customer: null,
+    members: [],
+    _count: { tasks: 0 },
+  },
+  "demo-2": {
+    id: "demo-2",
+    name: "Project Prometheus Design",
+    description: "New editorial design system for internal terminals.",
+    status: "planned",
+    budget: 12000,
+    progress: 15,
+    projectManager: { id: 1, firstName: "Demo", lastName: "Admin", email: "admin@oneflow.com" },
+    customer: null,
+    members: [],
+    _count: { tasks: 0 },
+  },
+};
+
 // GET single project
 export async function GET(req, { params }) {
   try {
@@ -9,9 +36,17 @@ export async function GET(req, { params }) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
+    const projectId = Number.parseInt(id, 10);
+
+    if (Number.isNaN(projectId)) {
+      if (demoProjectDetails[id]) {
+        return NextResponse.json(demoProjectDetails[id]);
+      }
+      return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
+    }
 
     const project = await prisma.project.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: projectId },
       include: {
         projectManager: {
           select: { id: true, firstName: true, lastName: true, email: true }

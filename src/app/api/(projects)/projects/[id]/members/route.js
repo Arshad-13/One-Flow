@@ -11,7 +11,14 @@ export async function GET(req, { params }) {
     }
 
     const { id } = await params;
-    const projectId = parseInt(id);
+    const projectId = Number.parseInt(id, 10);
+
+    if (Number.isNaN(projectId)) {
+      if (id.startsWith('demo-')) {
+        return NextResponse.json([]);
+      }
+      return NextResponse.json({ error: 'Invalid project id' }, { status: 400 });
+    }
 
     // Verify project exists and belongs to user's company
     const project = await prisma.project.findFirst({
@@ -70,7 +77,10 @@ export async function POST(req, { params }) {
     }
 
     const { id } = await params;
-    const projectId = parseInt(id);
+    const projectId = Number.parseInt(id, 10);
+    if (Number.isNaN(projectId)) {
+      return NextResponse.json({ error: 'Cannot modify members for demo or invalid project id' }, { status: 400 });
+    }
     const { userId, role } = await req.json();
 
     if (!userId) {
@@ -132,7 +142,10 @@ export async function DELETE(req, { params }) {
     }
 
     const { id } = await params;
-    const projectId = parseInt(id);
+    const projectId = Number.parseInt(id, 10);
+    if (Number.isNaN(projectId)) {
+      return NextResponse.json({ error: 'Cannot modify members for demo or invalid project id' }, { status: 400 });
+    }
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 

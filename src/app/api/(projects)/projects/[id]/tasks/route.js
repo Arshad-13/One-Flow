@@ -9,9 +9,17 @@ export async function GET(req, { params }) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
+    const projectId = Number.parseInt(id, 10);
+
+    if (Number.isNaN(projectId)) {
+      if (id.startsWith("demo-")) {
+        return NextResponse.json([]);
+      }
+      return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
+    }
 
     const tasks = await prisma.task.findMany({
-      where: { projectId: parseInt(id) },
+      where: { projectId },
       include: {
         assignees: {
           include: {
@@ -50,6 +58,15 @@ export async function POST(req, { params }) {
     }
 
     const { id } = await params;
+    const projectId = Number.parseInt(id, 10);
+
+    if (Number.isNaN(projectId)) {
+      if (id.startsWith("demo-")) {
+        return NextResponse.json({ error: "Tasks cannot be created for demo projects" }, { status: 400 });
+      }
+      return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
+    }
+
     const { title, description, status, priority, assignedUserIds, dueDate, estimatedHours } = await req.json();
 
     if (!title) {
@@ -62,7 +79,7 @@ export async function POST(req, { params }) {
         description,
         status: status || 'new',
         priority: priority || 'medium',
-        projectId: parseInt(id),
+        projectId,
         dueDate: dueDate ? new Date(dueDate) : null,
         estimatedHours: estimatedHours ? parseFloat(estimatedHours) : null,
         createdBy: user.id

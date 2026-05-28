@@ -62,24 +62,24 @@ export async function POST(req) {
 
     const res = NextResponse.json({ message: "Login successful", token });
     
-    // Set cookie with production-safe settings
-    const isProduction = process.env.NODE_ENV === 'production';
+    // Check if request is secure
+    const isSecure = req.headers.get("x-forwarded-proto") === "https" || req.url.startsWith("https:");
     
     const cookieOptions = { 
       httpOnly: true, 
-      secure: isProduction,
+      secure: isSecure,
       sameSite: 'lax',
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
     };
     
     res.cookies.set("token", token, cookieOptions);
-    if (isProduction) {
+    if (isSecure) {
       res.cookies.set("__Secure-token", token, cookieOptions);
     }
     
     console.log('[Login] Cookie set:', {
-      isProduction,
+      isSecure,
       cookieOptions,
       userEmail: user.email,
       role: normalizedRole

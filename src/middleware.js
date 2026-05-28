@@ -23,6 +23,8 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
+  const isSecure = req.headers.get("x-forwarded-proto") === "https" || req.url.startsWith("https:");
+  
   // ─── Detect Next.js RSC navigation requests ───────────────────────────────
   // RSC requests carry this header — we still auth-check them, but we must
   // NOT send a 307 redirect (that causes a full navigation to /login in the
@@ -30,7 +32,8 @@ export async function middleware(req) {
   const isRscNavigation =
     req.headers.get("RSC") === "1" ||
     req.nextUrl.searchParams.has("_rsc") ||
-    req.headers.get("Next-Router-State-Tree") !== null;
+    req.headers.get("Next-Router-State-Tree") !== null ||
+    req.headers.get("Next-Router-Prefetch") === "1";
 
   const token = getTokenFromRequest(req);
 
@@ -56,13 +59,13 @@ export async function middleware(req) {
         JSON.stringify({ error: "Session expired" }),
         { status: 401, headers: { "content-type": "application/json" } }
       );
-      res.cookies.set("token", "", { httpOnly: true, maxAge: 0, path: "/" });
-      res.cookies.set("__Secure-token", "", { httpOnly: true, maxAge: 0, path: "/" });
+      res.cookies.set("token", "", { httpOnly: true, maxAge: 0, path: "/", secure: isSecure });
+      res.cookies.set("__Secure-token", "", { httpOnly: true, maxAge: 0, path: "/", secure: isSecure });
       return res;
     }
     const res = NextResponse.redirect(new URL("/login", req.url));
-    res.cookies.set("token", "", { httpOnly: true, maxAge: 0, path: "/" });
-    res.cookies.set("__Secure-token", "", { httpOnly: true, maxAge: 0, path: "/" });
+    res.cookies.set("token", "", { httpOnly: true, maxAge: 0, path: "/", secure: isSecure });
+    res.cookies.set("__Secure-token", "", { httpOnly: true, maxAge: 0, path: "/", secure: isSecure });
     return res;
   }
 

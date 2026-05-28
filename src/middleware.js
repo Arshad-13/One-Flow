@@ -33,7 +33,8 @@ export async function middleware(req) {
     req.headers.get("RSC") === "1" ||
     req.nextUrl.searchParams.has("_rsc") ||
     req.headers.get("Next-Router-State-Tree") !== null ||
-    req.headers.get("Next-Router-Prefetch") === "1";
+    req.headers.get("Next-Router-Prefetch") === "1" ||
+    req.headers.get("purpose") === "prefetch";
 
   const token = getTokenFromRequest(req);
 

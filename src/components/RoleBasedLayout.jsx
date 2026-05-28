@@ -177,10 +177,10 @@ export default function RoleBasedLayout({ children, role }) {
                     <ModeToggle />
                 </div>
                 <Button variant="ghost" className="w-full justify-start text-sm text-destructive hover:bg-destructive/5 rounded-[7px]" asChild>
-                    <Link href="/api/auth/logout">
+                    <a href="/api/auth/logout">
                         <LogOut className="w-4 h-4 mr-3" />
                         Logout
-                    </Link>
+                    </a>
                 </Button>
             </div>
         </>

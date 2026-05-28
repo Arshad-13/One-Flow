@@ -11,6 +11,24 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
+    if (projectId === 99991 || projectId === 99992) {
+      const isPhoenix = projectId === 99991;
+      return NextResponse.json({
+        projectName: isPhoenix ? "Phoenix Infrastructure Revamp" : "Project Prometheus Design",
+        progress: isPhoenix ? 65 : 15,
+        revenue: { total: 0, salesOrders: { amount: 0, count: 0 }, invoices: { amount: 0, count: 0 } },
+        costs: {
+          expenses: { amount: 0, count: 0 },
+          purchaseOrders: { amount: 0, count: 0 },
+          vendorBills: { amount: 0, count: 0 },
+          total: 0,
+        },
+        profitability: { profit: 0, profitMargin: 0, status: "Break-even" },
+        budget: { allocated: isPhoenix ? 45000 : 12000, used: 0, remaining: isPhoenix ? 45000 : 12000, utilization: 0 },
+        unbilled: { timesheets: 0, expenses: 0 },
+      });
+    }
+
     if (Number.isNaN(projectId)) {
       if (id.startsWith("demo-")) {
         return NextResponse.json({

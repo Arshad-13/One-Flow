@@ -427,10 +427,9 @@ export default function VendorBillForm({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="received">Received</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="posted">Posted</SelectItem>
                     <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

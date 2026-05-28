@@ -63,9 +63,14 @@ export default function RoleBasedLayout({ children, role }) {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await fetch('/api/auth/me', { credentials: 'include' })
+                const res = await fetch('/api/auth/me', {
+                    credentials: 'include',
+                    // Disable cache so we always get a fresh auth check
+                    cache: 'no-store',
+                })
 
-                if (res.status === 401) {
+                if (res.status === 401 || res.status === 403) {
+                    // Genuinely unauthenticated — redirect to login
                     setRedirecting(true)
                     router.push('/login')
                     return
@@ -76,21 +81,19 @@ export default function RoleBasedLayout({ children, role }) {
                     setUser(data)
 
                     if (data.role !== role) {
+                        // Authenticated but wrong role — redirect to their dashboard
                         setRedirecting(true)
                         router.push('/' + data.role + '/dashboard')
                         return
                     }
                 } else {
-                    // Any other error (403, 500, etc.) → redirect to login
-                    setRedirecting(true)
-                    router.push('/login')
-                    return
+                    // Server error (5xx) — don't redirect, show error state
+                    // This prevents a network glitch from logging out the user
+                    console.error('Session check returned:', res.status)
                 }
             } catch (error) {
+                // Network error — don't redirect, the user might just have a flaky connection
                 console.error('Session check failed:', error)
-                setRedirecting(true)
-                router.push('/login')
-                return
             } finally {
                 setLoading(false)
             }

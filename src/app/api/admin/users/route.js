@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 const demoUsers = [
-    { id: "u1", firstName: "Alice", lastName: "Project", email: "alice@oneflow.com", role: "project_manager", status: "active" },
-    { id: "u2", firstName: "Bob", lastName: "Dev", email: "bob@oneflow.com", role: "team_member", status: "active" },
-    { id: "u3", firstName: "Charlie", lastName: "Finance", email: "charlie@oneflow.com", role: "sales_finance", status: "active" }
+    { id: 99991, firstName: "Alice", lastName: "Project", email: "alice@oneflow.com", role: { name: "project_manager" }, hourlyRate: 45.00, isActive: true },
+    { id: 99992, firstName: "Bob", lastName: "Dev", email: "bob@oneflow.com", role: { name: "team_member" }, hourlyRate: 35.00, isActive: true },
+    { id: 99993, firstName: "Charlie", lastName: "Finance", email: "charlie@oneflow.com", role: { name: "sales_finance" }, hourlyRate: 40.00, isActive: true }
 ];
 
 export async function GET(req) {
@@ -17,7 +17,7 @@ export async function GET(req) {
 
     const users = await prisma.user.findMany({
       where: { companyId: user.companyId },
-      select: { id: true, firstName: true, lastName: true, email: true, role: true }
+      select: { id: true, firstName: true, lastName: true, email: true, role: true, hourlyRate: true, isActive: true }
     });
 
     if (users.length <= 1) { // Only admin themselves

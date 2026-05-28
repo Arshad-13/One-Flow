@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const demoProjects = [
   {
-    id: "demo-1",
+    id: 99991,
     name: "Phoenix Infrastructure Revamp",
     description: "Modernizing core cloud clusters and edge nodes.",
     status: "in_progress",
@@ -15,7 +15,7 @@ const demoProjects = [
     _count: { tasks: 12 }
   },
   {
-    id: "demo-2",
+    id: 99992,
     name: "Project Prometheus Design",
     description: "New editorial design system for internal terminals.",
     status: "planned",

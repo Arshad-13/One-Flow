@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const demoExpenses = [
     {
-        id: "e1",
+        id: 99991,
         expenseNumber: "EXP-2024-001",
         description: "Cloud Architecture Audit",
         amount: 2450.00,
@@ -16,7 +16,7 @@ const demoExpenses = [
         user: { firstName: "Demo", lastName: "Admin" }
     },
     {
-        id: "e2",
+        id: 99992,
         expenseNumber: "EXP-2024-002",
         description: "Hardware Procurement",
         amount: 890.00,

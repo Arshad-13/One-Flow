@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 const demoTimesheets = [
-    { id: "ts-1", hours: 4.5, description: "Frontend Refactoring", workDate: new Date().toISOString(), task: { title: "Hero Redesign" } },
-    { id: "ts-2", hours: 2.0, description: "Contrast Audit", workDate: new Date().toISOString(), task: { title: "Accessibility Fixes" } }
+    { id: 99991, hours: 4.5, description: "Frontend Refactoring", workDate: new Date().toISOString(), task: { title: "Hero Redesign" } },
+    { id: 99992, hours: 2.0, description: "Contrast Audit", workDate: new Date().toISOString(), task: { title: "Accessibility Fixes" } }
 ];
 
 export async function GET(req) {
@@ -48,6 +48,13 @@ export async function POST(req) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    // Fetch user's current hourly rate from database
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { hourlyRate: true }
+    });
+    const currentRate = dbUser?.hourlyRate ? parseFloat(dbUser.hourlyRate) : 0.00;
+
     const timesheet = await prisma.timesheet.create({
       data: {
         hours: parseFloat(hours),
@@ -56,7 +63,7 @@ export async function POST(req) {
         taskId,
         projectId,
         userId: user.id,
-        hourlyRate: 50
+        hourlyRate: currentRate
       }
     });
 

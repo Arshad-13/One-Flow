@@ -12,6 +12,15 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = parseInt(id);
 
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json({
+        todo: [],
+        inProgress: [],
+        review: [],
+        done: [],
+      });
+    }
+
     // Check if project exists
     const project = await prisma.project.findUnique({
       where: { id: projectId },

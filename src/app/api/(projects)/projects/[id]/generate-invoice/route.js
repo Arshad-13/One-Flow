@@ -14,6 +14,12 @@ export async function POST(req, { params }) {
     }
 
     const { id } = await params;
+    const projectId = parseInt(id);
+
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json({ error: "Cannot generate invoices for demo projects" }, { status: 400 });
+    }
+
     const { 
       customerName, 
       invoiceNumber, 
@@ -28,7 +34,7 @@ export async function POST(req, { params }) {
 
     // Validate project exists
     const project = await prisma.project.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: projectId }
     });
 
     if (!project) {

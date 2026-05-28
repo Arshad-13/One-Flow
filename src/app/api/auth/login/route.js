@@ -57,7 +57,7 @@ export async function POST(req) {
       role: normalizedRole,
     })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("1d")
+      .setExpirationTime("7d")
       .sign(secret);
 
     const res = NextResponse.json({ message: "Login successful", token });

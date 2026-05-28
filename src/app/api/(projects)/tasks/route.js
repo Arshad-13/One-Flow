@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const demoTasks = [
   {
-    id: "task-1",
+    id: 99991,
     title: "Define Prometheus Core Tokens",
     status: "done",
     priority: "high",
@@ -12,7 +12,7 @@ const demoTasks = [
     assignees: []
   },
   {
-    id: "task-2",
+    id: 99992,
     title: "Refactor Hero Visual Logic",
     status: "in_progress",
     priority: "medium",
@@ -20,7 +20,7 @@ const demoTasks = [
     assignees: []
   },
   {
-    id: "task-3",
+    id: 99993,
     title: "Audit Contrast Accessibility",
     status: "new",
     priority: "low",

@@ -199,7 +199,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-ink">{member.firstName} {member.lastName}</p>
-                                <p className="text-[11px] text-ink-3 uppercase tracking-wider">{member.role.replace(/_/g, ' ')}</p>
+                                <p className="text-[11px] text-ink-3 uppercase tracking-wider">{(member.role?.name || member.role || '').replace(/_/g, ' ')}</p>
                             </div>
                         </div>
                     ))}

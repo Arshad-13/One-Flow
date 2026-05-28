@@ -11,10 +11,11 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json([]);
+    }
+
     if (Number.isNaN(projectId)) {
-      if (id.startsWith("demo-")) {
-        return NextResponse.json([]);
-      }
       return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
     }
 
@@ -60,10 +61,11 @@ export async function POST(req, { params }) {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json({ error: "Tasks cannot be created for demo projects" }, { status: 400 });
+    }
+
     if (Number.isNaN(projectId)) {
-      if (id.startsWith("demo-")) {
-        return NextResponse.json({ error: "Tasks cannot be created for demo projects" }, { status: 400 });
-      }
       return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
     }
 

@@ -80,7 +80,7 @@ export async function POST(req) {
       role: user.role.name,
     })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("1d")
+      .setExpirationTime("7d")
       .sign(secret);
 
     const res = NextResponse.json(
@@ -100,8 +100,24 @@ export async function POST(req) {
       { status: 201 }
     );
 
-    // Set token as httpOnly cookie
-    res.cookies.set("token", token, { httpOnly: true, sameSite: "lax", path: "/" });
+    // Set token as httpOnly cookie (same settings as login route)
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days — must match JWT expiry
+    });
+    if (isProduction) {
+      res.cookies.set("__Secure-token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+    }
     return res;
   } catch (error) {
     console.error(error);

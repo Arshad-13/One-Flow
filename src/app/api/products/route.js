@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 const demoProducts = [
-    { id: "p1", name: "Cloud Strategy Consulting", description: "Hourly consultation for cloud architecture.", price: 250 },
-    { id: "p2", name: "Frontend Development", description: "Per-unit development services.", price: 180 }
+    { id: 99991, name: "Cloud Strategy Consulting", description: "Hourly consultation for cloud architecture.", price: 250 },
+    { id: 99992, name: "Frontend Development", description: "Per-unit development services.", price: 180 }
 ];
 
 export async function GET(req) {
@@ -12,9 +12,7 @@ export async function GET(req) {
     const user = await getUserFromRequest(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const products = await prisma.product.findMany({
-      where: { companyId: user.companyId }
-    });
+    const products = await prisma.product.findMany();
 
     if (products.length === 0) {
         return NextResponse.json(demoProducts);

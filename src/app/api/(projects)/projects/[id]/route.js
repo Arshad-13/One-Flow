@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 const demoProjectDetails = {
-  "demo-1": {
-    id: "demo-1",
+  99991: {
+    id: 99991,
     name: "Phoenix Infrastructure Revamp",
     description: "Modernizing core cloud clusters and edge nodes.",
     status: "in_progress",
@@ -15,8 +15,8 @@ const demoProjectDetails = {
     members: [],
     _count: { tasks: 0 },
   },
-  "demo-2": {
-    id: "demo-2",
+  99992: {
+    id: 99992,
     name: "Project Prometheus Design",
     description: "New editorial design system for internal terminals.",
     status: "planned",
@@ -38,10 +38,11 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json(demoProjectDetails[projectId]);
+    }
+
     if (Number.isNaN(projectId)) {
-      if (demoProjectDetails[id]) {
-        return NextResponse.json(demoProjectDetails[id]);
-      }
       return NextResponse.json({ error: "Invalid project id" }, { status: 400 });
     }
 

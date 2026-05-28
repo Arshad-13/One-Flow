@@ -13,6 +13,10 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
 
+    if (projectId === 99991 || projectId === 99992) {
+      return NextResponse.json([]);
+    }
+
     if (Number.isNaN(projectId)) {
       if (id.startsWith('demo-')) {
         return NextResponse.json([]);
@@ -78,7 +82,7 @@ export async function POST(req, { params }) {
 
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
-    if (Number.isNaN(projectId)) {
+    if (Number.isNaN(projectId) || projectId === 99991 || projectId === 99992) {
       return NextResponse.json({ error: 'Cannot modify members for demo or invalid project id' }, { status: 400 });
     }
     const { userId, role } = await req.json();
@@ -143,7 +147,7 @@ export async function DELETE(req, { params }) {
 
     const { id } = await params;
     const projectId = Number.parseInt(id, 10);
-    if (Number.isNaN(projectId)) {
+    if (Number.isNaN(projectId) || projectId === 99991 || projectId === 99992) {
       return NextResponse.json({ error: 'Cannot modify members for demo or invalid project id' }, { status: 400 });
     }
     const { searchParams } = new URL(req.url);

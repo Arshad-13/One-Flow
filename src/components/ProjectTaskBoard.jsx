@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import LinksPanel from '@/components/links-panel'
+import LinksPanel from '@/components/project/ProjectLinksPanel'
 import AddTaskModal from '@/components/AddTaskModal'
 import { TaskModal } from '@/components/task-modal'
 import { useProjectTour } from '@/hooks/useProjectTour'

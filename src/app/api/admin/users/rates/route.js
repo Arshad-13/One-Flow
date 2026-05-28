@@ -26,7 +26,7 @@ export async function PUT(req) {
       return NextResponse.json({ error: "userIds must be a non-empty array" }, { status: 400 });
     }
 
-    if (!hourlyRate || isNaN(parseFloat(hourlyRate)) || parseFloat(hourlyRate) < 0) {
+    if (hourlyRate === undefined || hourlyRate === null || isNaN(parseFloat(hourlyRate)) || parseFloat(hourlyRate) < 0) {
       return NextResponse.json({ error: "Invalid hourly rate" }, { status: 400 });
     }
 

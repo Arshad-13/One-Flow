@@ -13,6 +13,32 @@ export async function GET(req, { params }) {
     const { id } = await params;
     const projectId = parseInt(id);
 
+    if (projectId === 99991 || projectId === 99992) {
+      const availableUsers = await prisma.user.findMany({
+        where: {
+          companyId: user.companyId,
+          isActive: true
+        },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: {
+            select: {
+              name: true
+            }
+          },
+          hourlyRate: true
+        },
+        orderBy: [
+          { firstName: 'asc' },
+          { lastName: 'asc' }
+        ]
+      });
+      return NextResponse.json(availableUsers);
+    }
+
     // Verify project exists and belongs to user's company
     const project = await prisma.project.findFirst({
       where: {

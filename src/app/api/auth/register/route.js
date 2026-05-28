@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
@@ -6,9 +6,9 @@ import { generateUniqueCompanyId } from "@/lib/companyId";
 import { verifyOTP } from "@/lib/otp";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-const prisma = new PrismaClient();
 
 export async function POST(req) {
+
   try {
     const { name, email, password, companyName, otp } = await req.json();
 
@@ -106,10 +106,8 @@ export async function POST(req) {
   } catch (error) {
     console.error(error);
     if (error.code === 'P2002') {
-      return NextResponse.json({ error: "User with this email already exists" }, { status: 409 }); // 409 Conflict
+      return NextResponse.json({ error: "User with this email already exists" }, { status: 409 });
     }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
   }
 }

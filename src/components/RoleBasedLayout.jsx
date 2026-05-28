@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { 
-    LayoutDashboard, 
-    FolderKanban, 
-    Clock, 
-    Receipt, 
-    FileText, 
+import {
+    LayoutDashboard,
+    FolderKanban,
+    Clock,
+    Receipt,
+    FileText,
     DollarSign,
     BarChart3,
     Settings,
@@ -57,27 +57,40 @@ export default function RoleBasedLayout({ children, role }) {
     const router = useRouter()
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [redirecting, setRedirecting] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const res = await fetch('/api/auth/me', { credentials: 'include' })
+
                 if (res.status === 401) {
+                    setRedirecting(true)
                     router.push('/login')
                     return
                 }
-                
+
                 if (res.ok) {
                     const data = await res.json()
                     setUser(data)
-                    
+
                     if (data.role !== role) {
+                        setRedirecting(true)
                         router.push('/' + data.role + '/dashboard')
+                        return
                     }
+                } else {
+                    // Any other error (403, 500, etc.) → redirect to login
+                    setRedirecting(true)
+                    router.push('/login')
+                    return
                 }
             } catch (error) {
                 console.error('Session check failed:', error)
+                setRedirecting(true)
+                router.push('/login')
+                return
             } finally {
                 setLoading(false)
             }
@@ -85,16 +98,28 @@ export default function RoleBasedLayout({ children, role }) {
         fetchUser()
     }, [role, router])
 
-    if (loading) {
+    // Show spinner during initial load OR while a redirect is in progress
+    if (loading || redirecting) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-background">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="w-8 h-8 animate-spin text-teal" />
+                    {redirecting && (
+                        <p className="text-sm text-ink-2">Redirecting...</p>
+                    )}
+                </div>
+            </div>
+        )
+    }
+
+    // At this point user is confirmed and role matches — safe to render
+    if (!user || user.role !== role) {
+        // Fallback guard (should never reach here due to redirecting state above)
         return (
             <div className="flex h-screen items-center justify-center bg-background">
                 <Loader2 className="w-8 h-8 animate-spin text-teal" />
             </div>
         )
-    }
-
-    if (!user || user.role !== role) {
-        return null
     }
 
     const navItems = roleNavItems[role] || []

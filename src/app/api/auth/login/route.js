@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import { normalizeRole } from "@/lib/roles";
-
-const prisma = new PrismaClient();
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(req) {

@@ -8,9 +8,8 @@ export async function GET(req) {
     const user = await getUserFromRequest(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Only admins can list all users
-    const userRole = user.role?.toUpperCase();
-    if (userRole !== 'ADMIN') {
+    // Only admins can list all users — compare against normalized lowercase role
+    if (user.role !== 'admin') {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
